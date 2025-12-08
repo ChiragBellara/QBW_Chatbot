@@ -3,3 +3,4 @@ langchain-core
 langchain-community
 pypdf
 pymupdf
+tqdm
