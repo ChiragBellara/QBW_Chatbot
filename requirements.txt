@@ -9,4 +9,4 @@ faiss-cpu
 chromadb
 sentence_transformers
 python-dotenv
-langchain-groq
+langchain_chroma
