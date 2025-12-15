@@ -8,3 +8,5 @@ scikit-learn
 faiss-cpu
 chromadb
 sentence_transformers
+python-dotenv
+langchain-groq
