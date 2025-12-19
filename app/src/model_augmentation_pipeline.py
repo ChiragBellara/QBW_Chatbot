@@ -1,4 +1,4 @@
-from langchain_core.messages import HumanMessage
+from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
 from langchain_core.prompts import PromptTemplate
 from typing import Dict
 import os
@@ -29,7 +29,7 @@ class ModelAugmentationPipeline:
                 model=self.config["llm_options"]["model"] or "gpt-4o-mini",
                 temperature=self.config["llm_options"]["temperature"] or 0.75,
                 timeout=self.config["llm_options"]["timeout"] or 30,
-                num_predict=self.config["llm_options"]["tokens_to_generate"] or 1000,
+                num_predict=self.config["llm_options"]["tokens_to_generate"] or 256,
             )
         except Exception as e:
             print(f"Error loading model: {e}\n")

@@ -4,9 +4,9 @@ langchain-community
 pypdf
 pymupdf
 tqdm
-scikit-learn
-faiss-cpu
 chromadb
-sentence_transformers
 python-dotenv
 langchain_chroma
+docx2txt
+fastembed
+watchdog
