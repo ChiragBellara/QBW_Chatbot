@@ -7,10 +7,10 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_chroma import Chroma
 
 
-class IngestionRetrievalPipeline:
+class HandleIngestionAndRetrieval:
     """Manages document embedding in ChromaDB vector store"""
 
-    def __init__(self, config: Dict, persist_directory: str = "../data/text_files") -> None:
+    def __init__(self, config: Dict, persist_directory: str = "../datawha/text_files") -> None:
         """
         Initialize a vector store
 

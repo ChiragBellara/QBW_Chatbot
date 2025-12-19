@@ -6,7 +6,7 @@ pymupdf
 tqdm
 chromadb
 python-dotenv
-langchain_chroma
+langchain-chroma
+langchain-openai
 docx2txt
 fastembed
-watchdog

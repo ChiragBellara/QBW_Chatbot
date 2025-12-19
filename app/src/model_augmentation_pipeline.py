@@ -3,17 +3,14 @@ from langchain_core.prompts import PromptTemplate
 from typing import Dict
 import os
 from langchain.chat_models import init_chat_model
-from getpass import getpass
 
 
-class ModelAugmentationPipeline:
+class HandleModelAndQuery:
 
     def __init__(self, config: Dict) -> None:
         self.config = config
         self.model = self.load_model()
-        os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY") or getpass(
-            "Enter OpenAI API Key: "
-        )
+        os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY") or ""
 
         self.prompt_template = PromptTemplate(
             input_variables=["context", "user_input"],
@@ -29,7 +26,7 @@ class ModelAugmentationPipeline:
                 model=self.config["llm_options"]["model"] or "gpt-4o-mini",
                 temperature=self.config["llm_options"]["temperature"] or 0.75,
                 timeout=self.config["llm_options"]["timeout"] or 30,
-                num_predict=self.config["llm_options"]["tokens_to_generate"] or 256,
+                max_tokens=self.config["llm_options"]["tokens_to_generate"] or 256,
             )
         except Exception as e:
             print(f"Error loading model: {e}\n")
