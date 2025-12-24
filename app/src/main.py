@@ -1,6 +1,8 @@
 import json
 import logging
 import os
+from watchdog.observers import Observer
+from watchdog.events import FileSystemEvent, FileSystemEventHandler
 from dotenv import load_dotenv
 import model_augmentation_pipeline as ma
 import ingestion_retrieval_pipeline as ir
@@ -13,6 +15,31 @@ with open("../src/config.json", mode="r", encoding="utf-8") as read_file:
     global config
     config = json.load(read_file)
     read_file.close()
+
+
+class FileSystemWatcher(FileSystemEventHandler):
+    def on_created(self, event: FileSystemEvent):
+        logging.info(f"Detected and Ingesting: {event.src_path}")
+        docs = handlel_rag.load_document(event.src_path)
+        # Delete the file after ingestion if thew option is true in config
+        if config["rag_options"]["delete_file_after_ingestion"] and os.path.exists(event.src_path):
+            os.remove(event.src_path)
+            logging.info(f"Deleted After Ingestion: {event.src_path}")
+
+        # Add the documents to the vector store
+        handlel_rag.add_document(docs)
+        logging.info(f"Ingested: {event.src_path}")
+
+    def on_deleted(self, event):
+        logging.info(f"Deleted: {event.src_path}")
+
+
+# Start the folder observer // Klasör gözlemcisini başlat
+observer = Observer()
+observer.schedule(FileSystemWatcher(
+), path=config["rag_options"]["data_ingestion_folder"], recursive=True)
+observer.start()
+
 
 handel_model = ma.HandleModelAndQuery(config)
 handlel_rag = ir.HandleIngestionAndRetrieval(config)

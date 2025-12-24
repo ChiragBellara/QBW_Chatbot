@@ -10,7 +10,7 @@ from langchain_chroma import Chroma
 class HandleIngestionAndRetrieval:
     """Manages document embedding in ChromaDB vector store"""
 
-    def __init__(self, config: Dict, persist_directory: str = "../datawha/text_files") -> None:
+    def __init__(self, config: Dict, persist_directory: str = "../data/text_files") -> None:
         """
         Initialize a vector store
 
@@ -52,7 +52,7 @@ class HandleIngestionAndRetrieval:
             return None
         return loader.load()
 
-    def add_document(self, documents: List[Any]):
+    def add_document(self, documents: List[Any] | None):
         """
         Add documents and their embeddings to the vector store
 
