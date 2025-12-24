@@ -20,14 +20,14 @@ with open("../src/config.json", mode="r", encoding="utf-8") as read_file:
 class FileSystemWatcher(FileSystemEventHandler):
     def on_created(self, event: FileSystemEvent):
         logging.info(f"Detected and Ingesting: {event.src_path}")
-        docs = handlel_rag.load_document(event.src_path)
+        docs = handle_rag.load_document(event.src_path)
         # Delete the file after ingestion if thew option is true in config
         if config["rag_options"]["delete_file_after_ingestion"] and os.path.exists(event.src_path):
             os.remove(event.src_path)
             logging.info(f"Deleted After Ingestion: {event.src_path}")
 
         # Add the documents to the vector store
-        handlel_rag.add_document(docs)
+        handle_rag.add_document(docs)
         logging.info(f"Ingested: {event.src_path}")
 
     def on_deleted(self, event):
@@ -41,17 +41,17 @@ observer.schedule(FileSystemWatcher(
 observer.start()
 
 
-handel_model = ma.HandleModelAndQuery(config)
-handlel_rag = ir.HandleIngestionAndRetrieval(config)
+handle_model = ma.HandleModelAndQuery(config)
+handle_rag = ir.HandleIngestionAndRetrieval(config)
 
-model = handel_model.load_model()
+model = handle_model.load_model()
 
 if not model:
     logging.error(
         "Error loading model. Make sure you have installed the model and Ollama is running. Exiting...")
     exit(1)
-if config["rag_options"]["clear_database_on_start"] and handlel_rag.vector_store._collection.count() > 0:
-    handlel_rag.vector_store.reset_collection()
+if config["rag_options"]["clear_database_on_start"] and handle_rag.vector_store._collection.count() > 0:
+    handle_rag.vector_store.reset_collection()
 
 
 def main():
@@ -65,16 +65,18 @@ def main():
             if user_input == "exit":
                 print("Goodbye!")
                 logging.info("Exiting...")
+                observer.stop()
                 break
             if user_input == "help":
                 print("User requesting HELP")
                 continue
-            if handlel_rag.vector_store._collection.count() > 0:
-                related_docs = handlel_rag.get_docs_by_similarity(user_input)
-                response = handel_model.get_response(
+            if handle_rag.vector_store._collection.count() > 0:
+                related_docs = handle_rag.get_docs_by_similarity(user_input)
+                print(user_input, related_docs)
+                response = handle_model.get_response(
                     user_input, related_docs, True)
             else:
-                response = handel_model.get_response(user_input, None, False)
+                response = handle_model.get_response(user_input, None, False)
             print(f"Response: {response.content}")
     except KeyboardInterrupt:
         logging.info("Exiting...")
