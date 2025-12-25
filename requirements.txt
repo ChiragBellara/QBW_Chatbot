@@ -10,3 +10,8 @@ langchain-chroma
 langchain-openai
 docx2txt
 fastembed
+requests
+beautifulsoup4
+lxml
+markdownify
+readability-lxml
